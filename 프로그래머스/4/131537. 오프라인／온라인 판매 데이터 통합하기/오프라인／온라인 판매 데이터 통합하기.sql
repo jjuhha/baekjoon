@@ -1,18 +1,20 @@
-SELECT * FROM (
-SELECT 
-    DATE_FORMAT(SALES_DATE,'%Y-%m-%d')AS SALES_DATE,
-    PRODUCT_ID,
-    USER_ID,
-    SALES_AMOUNT
-    FROM ONLINE_SALE
-    WHERE SALES_DATE LIKE '%-03-%'
-UNION
-SELECT 
-    DATE_FORMAT(SALES_DATE,'%Y-%m-%d')AS SALES_DATE ,
-    PRODUCT_ID,
-    NULL AS USER_ID,
-    SALES_AMOUNT
-    FROM OFFLINE_SALE
-    WHERE SALES_DATE LIKE '%-03-%'
-) A
-ORDER BY SALES_DATE, PRODUCT_ID, USER_ID;
+select 
+    date_format(os.sales_date, '%Y-%m-%d') sales_date,
+    os.product_id,
+    os.user_id,
+    os.sales_amount
+from (
+    select 
+        sales_date,
+        product_id,
+        user_id,
+        sales_amount from online_sale
+    union 
+    select 
+        sales_date, 
+        product_id,
+        NULL,
+        sales_amount from offline_sale
+) os
+where os.sales_date like '2022-03%'
+order by sales_date, product_id, user_id;
